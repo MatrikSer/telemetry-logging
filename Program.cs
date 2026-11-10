@@ -15,7 +15,9 @@ try
     	loggerConfiguration.ReadFrom.Configuration(context.Configuration));
     
     builder.Services.AddRazorPages();
-
+	
+    builder.Services.AddSerilog(Log.Logger);
+    
 	var app = builder.Build();
 
 	// Configure the HTTP request pipeline.
