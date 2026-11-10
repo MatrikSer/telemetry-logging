@@ -1,3 +1,5 @@
+using OpenTelemetry;
+using OpenTelemetry.Resources;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -11,12 +13,17 @@ try
 
 	var builder = WebApplication.CreateBuilder(args);
     
-    builder.Host.UseSerilog((context, loggerConfiguration) =>
-    	loggerConfiguration.ReadFrom.Configuration(context.Configuration));
+    // builder.Host.UseSerilog((context, loggerConfiguration) =>
+    // 	loggerConfiguration.ReadFrom.Configuration(context.Configuration));
     
     builder.Services.AddRazorPages();
 	
-    builder.Services.AddSerilog(Log.Logger);
+    // builder.Services.AddSerilog(Log.Logger);
+    
+    builder.Services.AddOpenTelemetry()
+	    .ConfigureResource(r => r.AddService("RentControl"))
+	    .WithLogging()
+	    .UseOtlpExporter();
     
 	var app = builder.Build();
 
@@ -36,7 +43,7 @@ try
 
 	app.MapRazorPages();
 
-	app.UseSerilogRequestLogging();
+	// app.UseSerilogRequestLogging();
 
 	app.Run();
 }
